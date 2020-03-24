@@ -11,6 +11,7 @@
 
 This code has 9 functions including main(). 
 
+
     def generate_subset(given_set):
 	This function generates every subsets of given set and returns them except for empty set.
 
@@ -39,14 +40,12 @@ This code has 9 functions including main().
 	This function receives the parameters from the Terminal.
 
 
-
  
 ## 3.	Instructions for compiling source codes 
 
-Just same as the instruction’s guide.  
+Just same as the [instruction](https://github.com/vctr7/Data_Science/blob/master/apriori_algorithm/apriori.pdf).
 
     python3 apriori.py 5 input.txt output.txt
-
 
 You may change the support rate for sure.
 

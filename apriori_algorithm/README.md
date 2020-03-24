@@ -1,6 +1,6 @@
 # Apriori Algorithm
 
-[Project Specification](https://github.com/vctr7/Data_Science/blob/master/apriori_algorithm/apriori.pdf)
+[Project Instruction](https://github.com/vctr7/Data_Science/blob/master/apriori_algorithm/apriori.pdf)
 
 ## 1.	Summary of the algorithm
 

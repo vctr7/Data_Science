@@ -5,7 +5,7 @@
 
   This code denotes the algorithm of decision tree. It is written in Python and composed with several functions. 
 
-The decision tree has some methods to decrease its error such as information gain, split information, and gini index. I select information gain in this project.
+The decision tree has some methods to decrease its error such as information gain, split information, and gini index. I complete all three structures in my code. Empirically, Gini shows better accuracy than others based on given dataset.
 
   I used very basic libraries; sys for I/O, math for calculating entropy, numpy for easy transpose matrix.
 
@@ -19,6 +19,10 @@ This code has several functions including main(). I'll introduce important funct
     def preprocess(file): Convert the train file into list form.
     
     def caculateAttrInfo(): Calculate the attribute's partial information(entropy).
+    
+    def caulateGini(): Caculate the attribute's gini index.
+    
+    def split_info(): Calculate the attribute's split info.
 
     def makeSubtree(): Make subtrees of highest gain attribute.
     

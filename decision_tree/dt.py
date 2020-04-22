@@ -3,6 +3,37 @@ import math
 import numpy as np
 
 
+def getGiniInfo(col, target_list):
+    gini_sum = 0
+    col_len = len(target_list)
+    unique_col = list(set(col))
+
+    for elem in unique_col:
+        temp = []
+        for num, item in enumerate(col):
+            if elem == item:
+                temp.append(target_list[num])
+
+        gini_sum += calculateGini(temp) * (len(temp) / col_len)
+
+    return gini_sum
+
+
+def calculateGini(temp):
+    length = len(temp)
+    summation = 0
+    for item in set(temp):
+        count = 0
+        for elem in temp:
+
+            if item == elem:
+                count += 1
+
+        summation += math.pow((count/length), 2)
+
+    return 1 - summation
+
+
 def split_info(column, target_list):
     summation = 0
     column_len = len(target_list)
@@ -19,11 +50,7 @@ def split_info(column, target_list):
 
 
 def getColNum(file):
-    with open(file, 'r', encoding='utf-8') as t:
-        for line in file:
-            length = len(line.split())
-            break
-    return length
+    return len(open(file, 'r', encoding='utf-8').readline().split())
 
 
 def preprocess(file, k):
@@ -33,7 +60,7 @@ def preprocess(file, k):
     category_result = []
     for i in range(k):
         category = []
-        for num, x in enumerate(lines):
+        for x in lines:
             category.append(x.split()[i])
 
         category_result.append(category)
@@ -51,10 +78,7 @@ def calculateInfoD(column):
         else:
             b += 1
 
-    x = max(a, 1e-10)
-    y = max(b, 1e-10)
-    s = x + y
-    return -((x / s) * math.log2(x / s)) - ((y / s) * math.log2(y / s))
+    return entropy(a, b)
 
 
 def entropy(a, b):
@@ -130,7 +154,7 @@ def makeSubtree(attr_list, target_list, elem, max_idx):
 def leaf(target_list):
     max_num = 0
     ans = 0
-    for elem in set(target_list):
+    for elem in set(target_list[1:]):
         count = target_list.count(elem)
         if max_num < count:
             max_num = count
@@ -139,11 +163,24 @@ def leaf(target_list):
     return ans
 
 
+def proportion(target_list):
+    max_num = 0
+    for elem in set(target_list[1:]):
+        count = target_list.count(elem)
+        if max_num < count:
+            max_num = count
+
+    # print()
+    return max_num / len(target_list)
+
+
 def DTProcess(attr_list, target_list, height):
 
     # Set max height as 3 to avoid over-fitting problem
     if height > 3:
-        return leaf(target_list)
+        por = proportion(target_list)
+        if por > (2 / 3):
+            return leaf(target_list)
 
     height += 1
 
@@ -155,30 +192,42 @@ def DTProcess(attr_list, target_list, height):
     elif len(set(target_list[1:])) == 1:
         return leaf(target_list)
 
-    # 우선 들어온 데이터에 대해 info 계산해서 best 정해야함.
+    # Get Info_D of given data to calculate gain.
     info_d = calculateInfoD(target_list[1:])
-
-    # Calculate the Gain on each attribute
-    gain_list = []
-    for column in attr_list:
-        column_info = getAttrInfo(column[1:], target_list[1:])
-        gain_list.append(gain(info_d, column_info))
-
-    # split_list = []
-    # for column in attr_list:
-    #     column_info = get_info(column[1:], target_list[1:])
-    #     s_info = split_info(column[1:], target_list[1:])
-    #     split_list.append(gain(info_d, column_info)/s_info)
 
     # Find the highest gain among the attributes.
     max_gain = 0
     max_idx = 0
-    for num, i in enumerate(gain_list):
-        if max_gain < i:
-            max_gain = i
+    min_gain = 1
+
+    # Gini
+    gini_list = []
+    for column in attr_list:
+        gini_list.append(getGiniInfo(column[1:], target_list[1:]))
+
+    for num, i in enumerate(gini_list):
+        if min_gain > i:
+            min_gain = i
             max_idx = num
 
-    # attr_list 중, max split info 을 가진 attr 구한다
+    # Calculate the Gain on each attribute
+    # gain_list = []
+    # for column in attr_list:
+    #     column_info = getAttrInfo(column[1:], target_list[1:])
+    #     gain_list.append(gain(info_d, column_info))
+    #
+    # for num, i in enumerate(gain_list):
+    #     if max_gain < i:
+    #         max_gain = i
+    #         max_idx = num
+
+    # split_list = []
+    # for column in attr_list:
+    #     column_info = getAttrInfo(column[1:], target_list[1:])
+    #     s_info = split_info(column[1:], target_list[1:])
+    #     split_list.append(gain(info_d, column_info)/s_info)
+    #
+    # # attr_list 중, max split info 을 가진 attr 구한다
     # for num, i in enumerate(split_list):
     #     if max_gain < i:
     #         max_gain = i
@@ -189,7 +238,7 @@ def DTProcess(attr_list, target_list, height):
     tree = {best: {}}
 
     # Find the subtrees of current node.
-    for num, elem in enumerate(set(attr_list[max_idx][1:])):
+    for elem in set(attr_list[max_idx][1:]):
         new_attr_list, new_target = makeSubtree(attr_list, target_list, elem, max_idx)
         subtree = DTProcess(new_attr_list, new_target, height)
         tree[best][elem] = subtree
@@ -210,8 +259,6 @@ def predict(trx, attr, tree):
             elif key == trx[n]:
                 return predict(trx, attr, subtree)
 
-    return tree
-
 
 def classifier(file, tree):
     f = open(file, 'r', encoding='utf-8')
@@ -225,7 +272,6 @@ def classifier(file, tree):
         category_result.append(category)
 
     category_result = np.array(category_result).T
-
     t_attr = category_result[0]
     t_attr_list = category_result[1:]
     result = []
@@ -246,20 +292,40 @@ def save(train, test, result, output):
             if n == 0:
                 continue
 
-            new_line = line.strip() + '\t' + result[n-1] + '\n'
+            new_line = line.strip() + '\t' + str(result[n-1]) + '\n'
             output_file.write(new_line)
 
         f.close()
+
+
+def score(output, answer):
+    with open(output, 'r', encoding='utf-8') as f1, open(answer, 'r', encoding='utf-8') as f2:
+        my, ans = [], []
+        for n, line in enumerate(f1):
+            if n == 0:
+                continue
+            line = line.split()
+            my.append(line[-1])
+
+        for n, line in enumerate(f2):
+            if n == 0:
+                continue
+            line = line.split()
+            ans.append(line[-1])
+        print("ACCURACY : " + str(100*np.sum(np.array(my) == np.array(ans))/len(my)) + "%")
 
 
 def main():
     input_train = sys.argv[1]
     input_test = sys.argv[2]
     output_file = sys.argv[3]
+    answer = 'dt_answer1.txt'
 
     attr_list, target_list = preprocess(input_train, getColNum(input_train))
     result = classifier(input_test, DTProcess(attr_list, target_list, height=0))
     save(input_train, input_test, result, output_file)
+
+    score(output_file, answer)
 
 
 if __name__ == "__main__":

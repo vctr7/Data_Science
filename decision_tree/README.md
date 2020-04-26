@@ -26,7 +26,7 @@ This code has several functions including main(). I'll introduce important funct
 
     def makeSubtree(): Make subtrees of highest gain attribute.
     
-    def leaf(): Return the most unique value of leaf node.
+    def leaf(): Return the most frequent unique value of leaf node.
     
     def DTProcess(): Recursively complete the structure of the decision tree.
     

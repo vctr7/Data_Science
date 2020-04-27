@@ -3,7 +3,7 @@ import math
 import numpy as np
 
 
-def getGiniInfo(col, target_list):
+def getGiniIndex(col, target_list):
     gini_sum = 0
     col_len = len(target_list)
     unique_col = list(set(col))
@@ -193,17 +193,17 @@ def DTProcess(attr_list, target_list, height):
         return leaf(target_list)
 
     # Get Info_D of given data to calculate gain.
-    info_d = calculateInfoD(target_list[1:])
+    # info_d = calculateInfoD(target_list[1:])
 
     # Find the highest gain among the attributes.
-    max_gain = 0
+    # max_gain = 0
     max_idx = 0
     min_gain = 1
 
     # Gini
     gini_list = []
     for column in attr_list:
-        gini_list.append(getGiniInfo(column[1:], target_list[1:]))
+        gini_list.append(getGiniIndex(column[1:], target_list[1:]))
 
     for num, i in enumerate(gini_list):
         if min_gain > i:
@@ -319,13 +319,12 @@ def main():
     input_train = sys.argv[1]
     input_test = sys.argv[2]
     output_file = sys.argv[3]
-    answer = 'dt_answer1.txt'
 
     attr_list, target_list = preprocess(input_train, getColNum(input_train))
     result = classifier(input_test, DTProcess(attr_list, target_list, height=0))
     save(input_train, input_test, result, output_file)
 
-    score(output_file, answer)
+    # score(output_file, 'dt_answer1.txt')
 
 
 if __name__ == "__main__":

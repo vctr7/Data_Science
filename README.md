@@ -4,3 +4,5 @@
 - [Apriori Algorithm](https://github.com/vctr7/Data_Science/tree/master/apriori_algorithm)
 
 - [Decision Tree](https://github.com/vctr7/Data_Science/tree/master/decision_tree)
+
+- [DBSCAN](https://github.com/vctr7/Data_Science/new/master/DBSCAN)

@@ -1,4 +1,4 @@
-# DBSCAN
+# DBSCAN(Density-based spatial clustering of applications with noise)
 
 [Project Instruction](https://github.com/vctr7/Data_Science/blob/master/DBSCAN/2020_DM_Programming_Assignment_3.pdf)
 

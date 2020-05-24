@@ -11,6 +11,13 @@ visited = []
 
 
 def getInfo(file):
+    """
+    get information of input file
+
+    :param file: input text file
+    :return: index, x coordinate, y coordinate of file
+    """
+
     file = open(file, 'r', encoding='utf-8')
 
     idx, x_coor, y_coor = [], [], []
@@ -19,7 +26,6 @@ def getInfo(file):
         idx.append(int(elems[0]))
         x_coor.append(float(elems[1]))
         y_coor.append(float(elems[2]))
-
     # Increase the maximum number of recursive try in python. (default = 1e3)
     sys.setrecursionlimit(len(idx))
 
@@ -31,10 +37,28 @@ def getInfo(file):
 
 
 def getDistance(x1, y1, x2, y2):
+    """
+    get the distance between two points
+
+    :param x1: x_coordinate of point 1
+    :param y1: y_coordinate of point 1
+    :param x2: x_coordinate of point 2
+    :param y2: y_coordinate of point 2
+    :return: distance between two points
+    """
+
     return float(m.sqrt(m.pow((x2 - x1), 2) + m.pow((y2 - y1), 2)))
 
 
 def getNeighbor(x_list, y_list, elem):
+    """
+    get the number of neighbor points
+
+    :param x_list: whole x coordinates of input file
+    :param y_list: whole y coordinates of input file
+    :param elem: index of criterion point
+    :return:
+    """
     neighbor_idx = []
     for i in range(len(x_list)):    # range(len(x_list)) == idx
 
@@ -49,6 +73,12 @@ def getNeighbor(x_list, y_list, elem):
 
 
 def isCore(number_of_neighbors):
+    """
+    check the point is core point or not
+
+    :param number_of_neighbors: number of neighbors that criterion point have
+    :return: boolean value
+    """
     if number_of_neighbors >= minpts:
         return True
     else:
@@ -56,6 +86,13 @@ def isCore(number_of_neighbors):
 
 
 def isBorder(number_of_neighbors):
+    """
+    check the point is border point or not
+
+    :param number_of_neighbors: number of neighbors that criterion point have
+    :return: boolean value
+    """
+
     if minpts > number_of_neighbors > 1:
         return True
     else:
@@ -63,6 +100,15 @@ def isBorder(number_of_neighbors):
 
 
 def clustering(x_list, y_list, elem, cluster_num):
+    """
+    recursively search and include the points into specific cluster
+
+    :param x_list: whole x coordinates of input file
+    :param y_list: whole y coordinates of input file
+    :param elem: index of criterion point
+    :param cluster_num: cluster id of current recursion
+    """
+
     neighbors_of_elem = getNeighbor(x_list, y_list, elem)
 
     # elem'th index should be Core.
@@ -76,10 +122,19 @@ def clustering(x_list, y_list, elem, cluster_num):
 
     elif isBorder(len(neighbors_of_elem)):
         visited[elem] = cluster_num
-        return
 
 
 def getClusters(idx, x_list, y_list):
+    """
+    group the points into several clusters according to the given number of clusters
+
+
+    :param idx: whole index of input file
+    :param x_list: whole x coordinates of input file
+    :param y_list: whole y coordinates of input file
+    :return: cluster list
+    """
+
     unique_clusters = []
     cluster_num = 1
     temp = 0
@@ -88,7 +143,7 @@ def getClusters(idx, x_list, y_list):
             unique_clusters.append(cluster_num)
             clustering(x_list, y_list, elem, cluster_num)
             temp += len(visited[visited == cluster_num])
-            print("clustering :", str(cluster_num) + ', process(%) :', '%.1f' % (temp * 100 / len(idx)) + '%')
+            print("clustering id :", str(cluster_num) + ', number of points : ' + str(len(visited[visited == cluster_num])) + ', process(%) :', '%.1f' % (temp * 100 / len(idx)) + '%')
             cluster_num += 1
 
     print("Finish clustering")
@@ -102,16 +157,23 @@ def getClusters(idx, x_list, y_list):
 
     clusters = sorted(clusters_set, key=lambda x: x[0], reverse=True)
 
-    print("Delete", len(clusters_set)-number_of_cluster, "clusters")
+    print("Delete", len(clusters_set)-number_of_cluster, "cluster(s)")
     return clusters[:number_of_cluster]
 
 
-def plot(x, y, clusters):
+def plot(x_list, y_list, clusters):
+    """
+    plot the result
+
+    :param x_list: whole x coordinates of input file
+    :param y_list: whole y coordinates of input file
+    :param clusters: cluster list
+    """
     for category in clusters:
         xelem, yelem = [], []
         for elem in category[2]:
-            xelem.append(x[elem])
-            yelem.append(y[elem])
+            xelem.append(x_list[elem])
+            yelem.append(y_list[elem])
         plt.scatter(xelem, yelem, s=1.5, label=category[1])
     plt.legend()
     plt.tight_layout()
@@ -120,8 +182,14 @@ def plot(x, y, clusters):
 
 
 def save(file, clusters):
+    """
+    save the result into files
+
+    :param file: input file
+    :param clusters: cluster list
+    """
     for num, cluster in enumerate(clusters):
-        filename = file + '_cluster_' + str(num) + '.txt'
+        filename = file[:-4] + '_cluster_' + str(num) + '.txt'
         with open(filename, 'w', encoding='utf-8') as f:
             for line in cluster[2]:
                 f.write(str(line))
@@ -150,7 +218,7 @@ def main():
     save(args.Input_file, clusters)
     plot(x, y, clusters)
 
-    print("Done")
+    print("Done.")
 
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@ import sys
 import math as m
 import numpy as np
 import matplotlib.pyplot as plt
+import argparse
 
 minpts = 0
 epsilon = 0
@@ -61,13 +62,6 @@ def isBorder(number_of_neighbors):
         return False
 
 
-def isOutlier(number_of_neighbors):
-    if number_of_neighbors == 1:
-        return True
-    else:
-        return False
-
-
 def clustering(x_list, y_list, elem, cluster_num):
     neighbors_of_elem = getNeighbor(x_list, y_list, elem)
 
@@ -120,6 +114,8 @@ def plot(x, y, clusters):
             yelem.append(y[elem])
         plt.scatter(xelem, yelem, s=1.5, label=category[1])
     plt.legend()
+    plt.tight_layout()
+    plt.savefig('dbscan.png', format='png', dpi=200)
     plt.show()
 
 
@@ -135,18 +131,26 @@ def save(file, clusters):
 def main():
     global epsilon, minpts, visited, number_of_cluster
 
-    input_file = sys.argv[1]
-    number_of_cluster = int(sys.argv[2])
-    epsilon = float(sys.argv[3])
-    minpts = int(sys.argv[4])
+    parser = argparse.ArgumentParser(description='Main parameters for DBSCAN algorithm')
+    parser.add_argument('Input_file', help="input file name")
+    parser.add_argument('Number_of_cluster', help="number of cluster to generate", type=int)
+    parser.add_argument('Epsilon', help="maximum distance to define neighbors between the points", type=float)
+    parser.add_argument('Minpts', help="minimum points to define a core point", type=int)
 
-    index, x, y = getInfo(input_file)
+    args = parser.parse_args()
+
+    number_of_cluster = args.Number_of_cluster
+    epsilon = args.Epsilon
+    minpts = args.Minpts
+
+    index, x, y = getInfo(args.Input_file)
     visited = np.zeros_like(index)
     clusters = getClusters(index, x, y)
 
-    save(input_file, clusters)
-    print("Done")
+    save(args.Input_file, clusters)
     plot(x, y, clusters)
+
+    print("Done")
 
 
 if __name__ == "__main__":

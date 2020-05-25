@@ -50,5 +50,5 @@ Since I use Python, it has subtle differnece with [instruction](https://github.c
 
 ## 4.	Any other specification of implementation and testing
 
-Numpy should be installed in the executed environment.
+Numpy, matplotlib should be installed in the executed environment.
 

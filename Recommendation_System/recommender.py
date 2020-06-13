@@ -1,8 +1,5 @@
-import numpy as np
 import argparse
-import time
 import math
-from numpy.linalg import svd
 
 
 def getInfo(filename):

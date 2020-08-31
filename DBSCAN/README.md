@@ -29,7 +29,7 @@ This code has several functions including main(). I'll introduce important funct
     
     def clustering(): Recursively find and include the points into specific cluster.
     
-    def def getClusters(): Group the points into several clusters according to the given number of clusters.
+    def getClusters(): Group the points into several clusters according to the given number of clusters.
     
     def save(): Save the result into files.
 

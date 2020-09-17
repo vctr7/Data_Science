@@ -31,7 +31,7 @@ This code has several functions including main(). I'll introduce important funct
 
     def compare(train_data, test_data): The main frame of this code. 
     
-    def def save(filename, result): Save the outcomes of prediction.
+    def save(filename, result): Save the outcomes of prediction.
     
 
  

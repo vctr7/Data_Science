@@ -23,9 +23,9 @@ This code has several functions including main(). I'll introduce important funct
     
     def getNeighbor(): Get neighbor point’s index.
     
-    def isCore(): Check the criterion point is a core point or not.
+    def isCore(): Check the point is the core point or not.
 
-    def isBorder(): Check the criterion point is a border point or not.
+    def isBorder(): Check the point is the border point or not.
     
     def clustering(): Recursively find and include the points into specific cluster.
     

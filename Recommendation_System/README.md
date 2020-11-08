@@ -7,7 +7,7 @@
 
 This is the code of recommender system which is operated based on the similarity method. There are numerous techniques in recommendation process such as Similarity, Matrix decomposition, and Neural network etc. I meaning to use a sophisticated method, but they require many expertise in math and AI area, that I didn’t learn. So, I mainly use a basic technic of cosine similarity.
 
-Since the technic I use is not elaborate, it shows a lower accuracy than expected. So I have to apply heuristic idea such as minimum cosine similarity value and minimum rating things.
+Since the technic I used is not elaborated, it shows a lower accuracy than expected. So I have to apply heuristic idea such as minimum cosine similarity value and minimum rating.
 
 I have multiple exams in recent days, so I cannot put much effort in this assignment than before. So maybe at this summer vacation, I would enhance the performance of this recommender system with up-to-date ways.
 

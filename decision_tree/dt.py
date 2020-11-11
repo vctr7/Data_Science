@@ -44,7 +44,7 @@ def split_info(column, target_list):
         for num, item in enumerate(column):
             if elem == item:
                 temp.append(target_list[num])
-        summation += calculateAttrInfo(temp, column_len)
+        summation += calculateAttrInfo(True, temp, column_len)
 
     return summation
 
@@ -68,19 +68,6 @@ def preprocess(file, k):
     return category_result[:-1], category_result[-1]
 
 
-def calculateInfoD(column):
-    set_ = set(column)
-    a = 0
-    b = 0
-    for elem in column:
-        if elem == list(set_)[0]:
-            a += 1
-        else:
-            b += 1
-
-    return entropy(a, b)
-
-
 def entropy(a, b):
     x = max(a, 1e-10)
     y = max(b, 1e-10)
@@ -88,7 +75,7 @@ def entropy(a, b):
     return -((x / s) * math.log2(x / s)) - ((y / s) * math.log2(y / s))
 
 
-def calculateAttrInfo(column, k):
+def calculateAttrInfo(flag, column, k):
     unique_elem = set(column)
     a = 0
     b = 0
@@ -98,7 +85,7 @@ def calculateAttrInfo(column, k):
         else:
             b += 1
 
-    return ((a + b) / k) * entropy(a, b)
+    return ((a + b) / k) * entropy(a, b) if flag else entropy(a, b)
 
 
 def getAttrInfo(col, target_list):
@@ -111,7 +98,7 @@ def getAttrInfo(col, target_list):
         for num, item in enumerate(col):
             if elem == item:
                 temp.append(target_list[num])
-        info_sum += calculateAttrInfo(temp, col_len)
+        info_sum += calculateAttrInfo(True, temp, col_len)
 
     return info_sum
 
@@ -193,7 +180,7 @@ def DTProcess(attr_list, target_list, height):
         return leaf(target_list)
 
     # Get Info_D of given data to calculate gain.
-    # info_d = calculateInfoD(target_list[1:])
+    # info_d = calculateInfoD(False, target_list[1:], False)
 
     # Find the highest gain among the attributes.
     # max_gain = 0

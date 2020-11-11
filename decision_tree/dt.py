@@ -55,30 +55,19 @@ def getColNum(file):
 
 def preprocess(file, k):
     f = open(file, 'r', encoding='utf-8')
-    lines = f.readlines()
-
-    category_result = []
-    for i in range(k):
-        category = []
-        for x in lines:
-            category.append(x.split()[i])
-
-        category_result.append(category)
-
+    category_result = [[x.split()[i] for x in f.readlines()] for i in range(k)]
     return category_result[:-1], category_result[-1]
 
 
 def entropy(a, b):
-    x = max(a, 1e-10)
-    y = max(b, 1e-10)
+    x, y = max(a, 1e-10), max(b, 1e-10)
     s = x + y
     return -((x / s) * math.log2(x / s)) - ((y / s) * math.log2(y / s))
 
 
 def calculateAttrInfo(flag, column, k):
     unique_elem = set(column)
-    a = 0
-    b = 0
+    a = b = 0
     for elem in column:
         if elem == list(unique_elem)[0]:
             a += 1
@@ -139,8 +128,7 @@ def makeSubtree(attr_list, target_list, elem, max_idx):
 
 
 def leaf(target_list):
-    max_num = 0
-    ans = 0
+    max_num = ans = 0
     for elem in set(target_list[1:]):
         count = target_list.count(elem)
         if max_num < count:
@@ -157,7 +145,6 @@ def proportion(target_list):
         if max_num < count:
             max_num = count
 
-    # print()
     return max_num / len(target_list)
 
 
@@ -184,14 +171,10 @@ def DTProcess(attr_list, target_list, height):
 
     # Find the highest gain among the attributes.
     # max_gain = 0
-    max_idx = 0
-    min_gain = 1
+    max_idx, min_gain = 0, 1
 
     # Gini
-    gini_list = []
-    for column in attr_list:
-        gini_list.append(getGiniIndex(column[1:], target_list[1:]))
-
+    gini_list = [getGiniIndex(column[1:], target_list[1:]) for column in attr_list]
     for num, i in enumerate(gini_list):
         if min_gain > i:
             min_gain = i
@@ -250,20 +233,11 @@ def predict(trx, attr, tree):
 def classifier(file, tree):
     f = open(file, 'r', encoding='utf-8')
     lines = f.readlines()
-    category_result = []
-
-    for i in range(getColNum(file)):
-        category = []
-        for x in lines:
-            category.append(x.split()[i])
-        category_result.append(category)
-
+    category_result = [[x.split()[i] for x in lines] for i in range(getColNum(file))]
     category_result = np.array(category_result).T
     t_attr = category_result[0]
     t_attr_list = category_result[1:]
-    result = []
-    for trx in t_attr_list:
-        result.append(predict(trx, t_attr, tree))
+    result = [predict(trx, t_attr, tree) for trx in t_attr_list]
 
     return result
 
@@ -310,7 +284,6 @@ def main():
     attr_list, target_list = preprocess(input_train, getColNum(input_train))
     result = classifier(input_test, DTProcess(attr_list, target_list, height=0))
     save(input_train, input_test, result, output_file)
-
     # score(output_file, 'dt_answer1.txt')
 
 

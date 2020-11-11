@@ -32,7 +32,7 @@ def getInfo(file):
     if len(idx) == len(x_coor) == len(y_coor):
         return idx, x_coor, y_coor
     else:
-        print("Something wrong with a input file.\n")
+        print("Input file error\n")
         exit()
 
 
@@ -204,7 +204,6 @@ def main():
     parser.add_argument('Number_of_cluster', help="number of cluster to generate", type=int)
     parser.add_argument('Epsilon', help="maximum distance to define neighbors between the points", type=float)
     parser.add_argument('Minpts', help="minimum points to define a core point", type=int)
-
     args = parser.parse_args()
 
     number_of_cluster = args.Number_of_cluster

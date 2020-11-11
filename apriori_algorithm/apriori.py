@@ -42,10 +42,10 @@ def scan(trx_data, item_id, min_support):
     global cnt
 
     # 요소 n 은 몇개의 그룹에 포함되어 있는지 계산
-    count = [0 for i in range(item_len)]
+    count = [0]*item_len
 
     # Count the number of a item_set containing single item_id
-    if cnt == 0:
+    if not cnt:
         for num, item in enumerate(item_id):
             for row in trx_data:
                 if {item}.issubset(set(row)):
@@ -60,9 +60,7 @@ def scan(trx_data, item_id, min_support):
                     count[num] += 1
 
     # Calculate support rate
-    new_count = []
-    for n in range(item_len):
-        new_count.append(count[n] / trx_len)
+    new_count = [count[n] / trx_len for n in range(item_len)]
 
     # Zip item and support rate
     support_of_c = list(zip(item_id, new_count))
@@ -78,11 +76,11 @@ def scan(trx_data, item_id, min_support):
 
 # Generate apriori candidates.
 def generate_apriori(lk, k):
-    retList = []
     global cnt2
+    retList = []
     lk_len = len(lk)
 
-    if cnt2 == 0:
+    if not cnt2:
         for i in range(lk_len):
             for j in range(i + 1, lk_len):
                 new_set = set(lk[i: i + 1]) | set(lk[j: j + 1])
@@ -142,8 +140,8 @@ def zip_item_and_support(item_set, support_data):
             for element in j:
                 item.append(element)
 
-    for i, j in enumerate(support_data):
-        for element in j:
+    for i in support_data:
+        for element in i:
             support.append(element)
 
     return list(zip(item, support))

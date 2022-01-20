@@ -10,7 +10,7 @@ DBSCAN groups the points using the several parameters such as epsilon and minpts
 
 I used very basic libraries; sys for change the maximum time of recursion, argparse for I/O, math for calculating the distance between two points, numpy for making zero array, matplotlib for visualizing the result.
 
-I meaning to perfectly reproduce the results of the instruction but eventually couldn’t. Maybe there is subtle differences between my code and TA’s.
+I meaning to perfectly reproduce the results of the instruction but eventually couldn’t. Maybe there are subtle differences between my code and TA’s.
 
 
 ## 2.	Detailed description of codes (for each function) 
